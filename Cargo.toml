@@ -1,0 +1,37 @@
+[package]
+name = "quicksys"
+version = "1.0.0"
+edition = "2021"
+description = "Small, fast system information collector with Tally detection"
+authors = ["SysProbe Team"]
+
+[dependencies]
+# Cross-platform dependencies
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+clap = { version = "4.3", features = ["derive"] }
+
+# Optional dependencies
+tokio = { version = "1.28", features = ["full"], optional = true }
+axum = { version = "0.6", optional = true }
+quick-xml = { version = "0.28", features = ["serialize"], optional = true }
+
+[target.'cfg(windows)'.dependencies]
+# Windows-specific dependencies
+windows = { version = "0.48", features = ["Win32_System_SystemInformation", "Win32_System_Registry", "Win32_System_Diagnostics_Debug", "Win32_Storage_FileSystem", "Win32_NetworkManagement_IpHelper", "Win32_Foundation"] }
+wmi = "0.12"
+winreg = "0.11"
+odbc-api = { version = "0.55", optional = true }
+
+[features]
+default = ["http", "tally-xml"]
+http = ["dep:tokio", "dep:axum"]
+tally-xml = ["dep:quick-xml"]
+tally-odbc = ["dep:odbc-api"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

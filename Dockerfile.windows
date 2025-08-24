@@ -1,0 +1,14 @@
+# Windows container for testing QuickSys
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+# Set working directory
+WORKDIR C:\QuickSys
+
+# Copy the executable and any required files
+COPY target/release/quicksys.exe .
+
+# Set the entrypoint
+ENTRYPOINT ["C:\\QuickSys\\quicksys.exe"]
+
+# Default command
+CMD ["--pretty"]
